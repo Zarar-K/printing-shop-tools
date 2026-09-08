@@ -1,301 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PrintShop Tools</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-  font-family:Arial,sans-serif;
-}
+  <title>PrintShop Photo Editor</title>
 
-body{
-  background:#f4f6f8;
-  color:#17202a;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-header{
-  background:#111827;
-  color:white;
-  padding:20px;
-  text-align:center;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      color: #222;
+    }
 
-header h1{
-  font-size:25px;
-}
+    header {
+      background: #111;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
 
-header p{
-  margin-top:6px;
-  color:#cbd5e1;
-  font-size:14px;
-}
+    header h1 {
+      margin: 0 0 5px;
+    }
 
-.container{
-  max-width:900px;
-  margin:auto;
-  padding:20px;
-}
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 15px;
+    }
 
-.upload-box{
-  background:white;
-  border:2px dashed #94a3b8;
-  border-radius:16px;
-  padding:30px 20px;
-  text-align:center;
-  margin-bottom:20px;
-}
+    .panel {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
 
-.upload-box h2{
-  margin-bottom:8px;
-}
+    input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+    }
 
-.upload-box p{
-  color:#64748b;
-  margin-bottom:18px;
-}
+    .preview-box {
+      text-align: center;
+      margin-top: 20px;
+      min-height: 100px;
+    }
 
-input[type=file]{
-  display:none;
-}
+    #preview {
+      max-width: 100%;
+      max-height: 500px;
+      display: none;
+      margin: auto;
+      transition: transform 0.3s;
+    }
 
-.upload-btn{
-  display:inline-block;
-  background:#2563eb;
-  color:white;
-  padding:13px 22px;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:bold;
-}
+    button {
+      border: none;
+      background: #111;
+      color: white;
+      padding: 12px 18px;
+      margin: 5px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 15px;
+    }
 
-#preview{
-  display:none;
-  max-width:100%;
-  max-height:350px;
-  margin:20px auto;
-  border-radius:10px;
-  box-shadow:0 4px 15px #0002;
-}
+    button:hover {
+      opacity: 0.85;
+    }
 
-.tools{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
-  gap:12px;
-}
+    .download {
+      background: #168a3b;
+    }
 
-.tool{
-  background:white;
-  border:1px solid #e2e8f0;
-  border-radius:14px;
-  padding:18px 10px;
-  text-align:center;
-  cursor:pointer;
-  transition:.2s;
-}
+    select {
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 15px;
+    }
 
-.tool:hover{
-  transform:translateY(-2px);
-  box-shadow:0 5px 15px #0001;
-}
+    canvas {
+      max-width: 100%;
+      border: 1px solid #ddd;
+      margin-top: 15px;
+    }
 
-.tool span{
-  font-size:28px;
-  display:block;
-  margin-bottom:8px;
-}
-
-.tool b{
-  font-size:14px;
-}
-
-.panel{
-  display:none;
-  background:white;
-  margin-top:20px;
-  padding:20px;
-  border-radius:16px;
-}
-
-.panel h3{
-  margin-bottom:15px;
-}
-
-button,select,input[type=number]{
-  padding:11px 14px;
-  border-radius:8px;
-  border:1px solid #cbd5e1;
-  background:white;
-  margin:4px;
-}
-
-button{
-  background:#2563eb;
-  color:white;
-  border:none;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-button.secondary{
-  background:#475569;
-}
-
-.controls{
-  display:flex;
-  flex-wrap:wrap;
-  gap:5px;
-}
-
-.download{
-  background:#16a34a;
-}
-
-footer{
-  text-align:center;
-  padding:30px;
-  color:#64748b;
-  font-size:13px;
-}
-
-canvas{
-  max-width:100%;
-  margin-top:15px;
-  border:1px solid #ddd;
-}
-</style>
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #666;
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-  <h1>🖨️ PrintShop Tools</h1>
-  <p>Simple photo tools for printing & photocopy shops</p>
+  <h1>📸 PrintShop Photo Editor</h1>
+  <p>Simple photo tools for printing shops</p>
 </header>
 
 <div class="container">
 
-  <div class="upload-box">
-    <h2>Upload Customer Photo</h2>
-    <p>Start by selecting a photo from your phone</p>
+  <!-- Upload -->
+  <div class="panel">
+    <h2>📷 Select Photo</h2>
 
-    <label class="upload-btn">
-      📷 Choose Photo
-      <input type="file" id="fileInput" accept="image/*">
-    </label>
+    <input type="file" id="fileInput" accept="image/*">
 
-    <img id="preview">
-  </div>
-
-  <div class="tools">
-
-    <div class="tool" onclick="openTool('passport')">
-      <span>📸</span>
-      <b>Passport Photo</b>
+    <div class="preview-box">
+      <img id="preview" alt="Photo Preview">
     </div>
-
-    <div class="tool" onclick="openTool('background')">
-      <span>🎨</span>
-      <b>Background</b>
-    </div>
-
-    <div class="tool" onclick="openTool('resize')">
-      <span>📐</span>
-      <b>Resize & Crop</b>
-    </div>
-
-    <div class="tool" onclick="openTool('rotate')">
-      <span>🔄</span>
-      <b>Rotate</b>
-    </div>
-
-    <div class="tool" onclick="openTool('print')">
-      <span>📄</span>
-      <b>Print Sheet</b>
-    </div>
-
-  </div>
-
-  <!-- Passport -->
-  <div class="panel" id="passport">
-    <h3>📸 Passport Photo</h3>
-
-    <p>Select background:</p>
-
-    <div class="controls">
-      <button onclick="background('white')">White</button>
-      <button onclick="background('#3b82f6')">Blue</button>
-    </div>
-
-    <p style="margin-top:15px;">Photo size:</p>
-
-    <select id="passportSize">
-      <option value="295,413">35 × 45 mm</option>
-      <option value="472,472">2 × 2 inch</option>
-    </select>
-
-    <button onclick="passportPhoto()">Create Photo</button>
-
-    <br>
-
-    <canvas id="passportCanvas"></canvas>
-
-    <br>
-
-    <button class="download" onclick="downloadCanvas('passportCanvas')">
-      ⬇ Download
-    </button>
-  </div>
-
-  <!-- Background -->
-  <div class="panel" id="background">
-    <h3>🎨 Background</h3>
-
-    <button onclick="background('white')">White Background</button>
-    <button onclick="background('#3b82f6')">Blue Background</button>
-
-    <p style="margin-top:12px;">
-      Note: This first version applies a background color.
-      Automatic person/background detection will be added later.
-    </p>
-  </div>
-
-  <!-- Resize -->
-  <div class="panel" id="resize">
-    <h3>📐 Resize</h3>
-
-    <input type="number" id="width" placeholder="Width">
-    <input type="number" id="height" placeholder="Height">
-
-    <button onclick="resizeImage()">Resize</button>
-
-    <br>
-
-    <canvas id="resizeCanvas"></canvas>
-
-    <br>
-
-    <button class="download" onclick="downloadCanvas('resizeCanvas')">
-      ⬇ Download
-    </button>
   </div>
 
   <!-- Rotate -->
-  <div class="panel" id="rotate">
-    <h3>🔄 Rotate Photo</h3>
+  <div class="panel">
+    <h2>🔄 Rotate Photo</h2>
 
     <button onclick="rotateImage(90)">Rotate 90°</button>
     <button onclick="rotateImage(180)">Rotate 180°</button>
     <button onclick="rotateImage(270)">Rotate 270°</button>
+    <button onclick="rotateImage(0)">Reset Rotation</button>
+  </div>
+
+  <!-- Effects -->
+  <div class="panel">
+    <h2>✨ Photo Effects</h2>
+
+    <button onclick="applyEffect('normal')">Normal</button>
+    <button onclick="applyEffect('grayscale')">Black & White</button>
+    <button onclick="applyEffect('brightness')">Bright</button>
   </div>
 
   <!-- Print Sheet -->
-  <div class="panel" id="print">
-    <h3>📄 Print Sheet</h3>
+  <div class="panel">
+    <h2>📄 Print Sheet</h2>
 
     <p>Select number of copies:</p>
 
@@ -308,7 +156,9 @@ canvas{
       <option value="12">12 Copies</option>
     </select>
 
-    <button onclick="printSheet()">Create Sheet</button>
+    <br>
+
+    <button onclick="printSheet()">Create Print Sheet</button>
 
     <br>
 
@@ -316,7 +166,7 @@ canvas{
 
     <br>
 
-    <button class="download" onclick="downloadCanvas('sheetCanvas')">
+    <button class="download" onclick="downloadCanvas()">
       ⬇ Download Sheet
     </button>
   </div>
@@ -331,27 +181,41 @@ canvas{
 
 let image = new Image();
 let currentRotation = 0;
+let currentEffect = "normal";
 
-document.getElementById("fileInput").addEventListener("change",function(e){
 
-  const file=e.target.files[0];
+/* =========================
+   SELECT PHOTO
+========================= */
 
-  if(!file) return;
+document.getElementById("fileInput").addEventListener("change", function(event) {
 
-  const reader=new FileReader();
+  const file = event.target.files[0];
 
-  reader.onload=function(event){
+  if (!file) {
+    return;
+  }
 
-    image.onload=function(){
+  const reader = new FileReader();
 
-      const preview=document.getElementById("preview");
+  reader.onload = function(e) {
 
-      preview.src=event.target.result;
-      preview.style.display="block";
+    image.onload = function() {
+
+      const preview = document.getElementById("preview");
+
+      preview.src = e.target.result;
+      preview.style.display = "block";
+
+      currentRotation = 0;
+      currentEffect = "normal";
+
+      preview.style.transform = "rotate(0deg)";
+      preview.style.filter = "none";
 
     };
 
-    image.src=event.target.result;
+    image.src = e.target.result;
 
   };
 
@@ -359,166 +223,169 @@ document.getElementById("fileInput").addEventListener("change",function(e){
 
 });
 
-function openTool(id){
 
-  if(!image.src){
+/* =========================
+   ROTATE
+========================= */
 
-    alert("Please upload a photo first.");
+function rotateImage(degrees) {
 
+  if (!image.src) {
+    alert("Please select a photo first.");
     return;
   }
 
-  document.querySelectorAll(".panel").forEach(p=>{
-    p.style.display="none";
-  });
+  currentRotation = degrees;
 
-  document.getElementById(id).style.display="block";
+  const preview = document.getElementById("preview");
+
+  preview.style.transform = "rotate(" + degrees + "deg)";
 }
 
-function background(color){
 
-  if(!image.src){
+/* =========================
+   PHOTO EFFECTS
+========================= */
 
-    alert("Upload a photo first.");
+function applyEffect(effect) {
+
+  if (!image.src) {
+    alert("Please select a photo first.");
     return;
   }
 
-  const canvas=document.createElement("canvas");
+  const preview = document.getElementById("preview");
 
-  canvas.width=image.width;
-  canvas.height=image.height;
+  currentEffect = effect;
 
-  const ctx=canvas.getContext("2d");
+  if (effect === "normal") {
+    preview.style.filter = "none";
+  }
 
-  ctx.fillStyle=color;
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+  if (effect === "grayscale") {
+    preview.style.filter = "grayscale(100%)";
+  }
 
-  ctx.drawImage(image,0,0);
+  if (effect === "brightness") {
+    preview.style.filter = "brightness(130%)";
+  }
 
-  image.src=canvas.toDataURL("image/jpeg");
-
-  document.getElementById("preview").src=image.src;
 }
 
-function passportPhoto(){
 
-  const size=document.getElementById("passportSize").value.split(",");
+/* =========================
+   CREATE PRINT SHEET
+========================= */
 
-  const w=parseInt(size[0]);
-  const h=parseInt(size[1]);
+function printSheet() {
 
-  const canvas=document.getElementById("passportCanvas");
-
-  canvas.width=w;
-  canvas.height=h;
-
-  const ctx=canvas.getContext("2d");
-
-  ctx.drawImage(image,0,0,w,h);
-}
-
-function resizeImage(){
-
-  const w=parseInt(document.getElementById("width").value);
-  const h=parseInt(document.getElementById("height").value);
-
-  if(!w || !h){
-
-    alert("Enter width and height.");
+  if (!image.src) {
+    alert("Please select a photo first.");
     return;
   }
 
-  const canvas=document.getElementById("resizeCanvas");
+  const canvas = document.getElementById("sheetCanvas");
+  const ctx = canvas.getContext("2d");
 
-  canvas.width=w;
-  canvas.height=h;
+  const copies = parseInt(
+    document.getElementById("copies").value
+  );
 
-  const ctx=canvas.getContext("2d");
+  canvas.width = 800;
+  canvas.height = 1100;
 
-  ctx.drawImage(image,0,0,w,h);
-}
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-function rotateImage(degrees){
+  const columns = 2;
+  const rows = Math.ceil(copies / columns);
 
-  const canvas=document.createElement("canvas");
-  const ctx=canvas.getContext("2d");
+  const cellWidth = canvas.width / columns;
+  const cellHeight = canvas.height / rows;
 
-  if(degrees===90 || degrees===270){
+  for (let i = 0; i < copies; i++) {
 
-    canvas.width=image.height;
-    canvas.height=image.width;
+    const x = (i % columns) * cellWidth;
+    const y = Math.floor(i / columns) * cellHeight;
 
-  }else{
+    ctx.save();
 
-    canvas.width=image.width;
-    canvas.height=image.height;
+    ctx.translate(
+      x + cellWidth / 2,
+      y + cellHeight / 2
+    );
+
+    ctx.rotate(
+      currentRotation * Math.PI / 180
+    );
+
+    if (currentEffect === "grayscale") {
+      ctx.filter = "grayscale(100%)";
+    }
+
+    if (currentEffect === "brightness") {
+      ctx.filter = "brightness(130%)";
+    }
+
+    if (currentEffect === "normal") {
+      ctx.filter = "none";
+    }
+
+    const padding = 15;
+
+    const maxWidth = cellWidth - padding * 2;
+    const maxHeight = cellHeight - padding * 2;
+
+    let width = image.width;
+    let height = image.height;
+
+    const ratio = Math.min(
+      maxWidth / width,
+      maxHeight / height
+    );
+
+    width *= ratio;
+    height *= ratio;
+
+    ctx.drawImage(
+      image,
+      -width / 2,
+      -height / 2,
+      width,
+      height
+    );
+
+    ctx.restore();
   }
 
-  if(degrees===90){
+}
 
-    ctx.translate(canvas.width,0);
-    ctx.rotate(Math.PI/2);
 
-  }else if(degrees===180){
+/* =========================
+   DOWNLOAD
+========================= */
 
-    ctx.translate(canvas.width,canvas.height);
-    ctx.rotate(Math.PI);
+function downloadCanvas() {
 
-  }else if(degrees===270){
+  const canvas = document.getElementById("sheetCanvas");
 
-    ctx.translate(0,canvas.height);
-    ctx.rotate(-Math.PI/2);
+  if (canvas.width === 0) {
+    alert("Please create a print sheet first.");
+    return;
   }
 
-  ctx.drawImage(image,0,0);
+  const link = document.createElement("a");
 
-  image.src=canvas.toDataURL("image/jpeg");
+  link.download = "printshop-sheet.jpg";
 
-  document.getElementById("preview").src=image.src;
+  link.href = canvas.toDataURL(
+    "image/jpeg",
+    0.95
+  );
+
+  link.click();
+
 }
 
-function printSheet(){
-
-  const copies=parseInt(document.getElementById("copies").value);
-
-  const canvas=document.getElementById("sheetCanvas");
-
-  const ctx=canvas.getContext("2d");
-
-  const photoW=295;
-  const photoH=413;
-
-  const columns=4;
-  const rows=Math.ceil(copies/columns);
-
-  canvas.width=columns*photoW;
-  canvas.height=rows*photoH;
-
-  ctx.fillStyle="white";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  for(let i=0;i<copies;i++){
-
-    const x=(i%columns)*photoW;
-    const y=Math.floor(i/columns)*photoH;
-
-    ctx.drawImage(image,x,y,photoW,photoH);
-  }
-}
-
-function downloadCanvas(id){
-
-  const canvas=document.getElementById(id);
-
-  const link=document.createElement("a");
-
-  link.download="printshop-photo.jpg";
-
-  link.href=canvas.toDataURL("image/jpeg",0.95);
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-}
 </script>
 
 </body>
