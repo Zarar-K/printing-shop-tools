@@ -1,194 +1,472 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>PrintShop Photo Editor</title>
+<title>PrintShop Photo Editor</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      color: #222;
-    }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f1f3f5;
+  color: #222;
+}
 
-    header {
-      background: #111;
-      color: white;
-      text-align: center;
-      padding: 20px;
-    }
+header {
+  background: #111;
+  color: white;
+  text-align: center;
+  padding: 22px 15px;
+}
 
-    header h1 {
-      margin: 0 0 5px;
-    }
+header h1 {
+  margin: 0 0 6px;
+}
 
-    .container {
-      max-width: 900px;
-      margin: 20px auto;
-      padding: 15px;
-    }
+.container {
+  width: 95%;
+  max-width: 1000px;
+  margin: 20px auto;
+}
 
-    .panel {
-      background: white;
-      padding: 20px;
-      margin-bottom: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    }
+.panel {
+  background: white;
+  padding: 20px;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.08);
+}
 
-    input[type="file"] {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-    }
+h2 {
+  margin-top: 0;
+}
 
-    .preview-box {
-      text-align: center;
-      margin-top: 20px;
-      min-height: 100px;
-    }
+input[type="file"] {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+}
 
-    #preview {
-      max-width: 100%;
-      max-height: 500px;
-      display: none;
-      margin: auto;
-      transition: transform 0.3s;
-    }
+select,
+input[type="number"],
+input[type="color"] {
+  padding: 10px;
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
 
-    button {
-      border: none;
-      background: #111;
-      color: white;
-      padding: 12px 18px;
-      margin: 5px;
-      border-radius: 7px;
-      cursor: pointer;
-      font-size: 15px;
-    }
+button {
+  background: #111;
+  color: white;
+  border: none;
+  padding: 11px 16px;
+  margin: 5px 3px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 14px;
+}
 
-    button:hover {
-      opacity: 0.85;
-    }
+button:hover {
+  opacity: .85;
+}
 
-    .download {
-      background: #168a3b;
-    }
+.green {
+  background: #168a3b;
+}
 
-    select {
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 15px;
-    }
+.blue {
+  background: #1769aa;
+}
 
-    canvas {
-      max-width: 100%;
-      border: 1px solid #ddd;
-      margin-top: 15px;
-    }
+.red {
+  background: #c62828;
+}
 
-    footer {
-      text-align: center;
-      padding: 25px;
-      color: #666;
-    }
-  </style>
+.preview-area {
+  text-align: center;
+  margin-top: 20px;
+  min-height: 100px;
+}
+
+#preview {
+  display: none;
+  max-width: 100%;
+  max-height: 500px;
+  margin: auto;
+  transition: transform .3s;
+}
+
+.info {
+  background: #f6f6f6;
+  padding: 10px;
+  border-radius: 7px;
+  margin-top: 10px;
+}
+
+.custom-size {
+  display: none;
+  margin-top: 10px;
+}
+
+#sheetCanvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 15px auto;
+  border: 1px solid #ccc;
+}
+
+footer {
+  text-align: center;
+  padding: 25px;
+  color: #777;
+}
+</style>
 </head>
 
 <body>
 
 <header>
   <h1>📸 PrintShop Photo Editor</h1>
-  <p>Simple photo tools for printing shops</p>
+  <p>Photo Size • Crop • Background • Print Sheet</p>
 </header>
 
 <div class="container">
 
-  <!-- Upload -->
-  <div class="panel">
-    <h2>📷 Select Photo</h2>
+<!-- ================= PHOTO UPLOAD ================= -->
 
-    <input type="file" id="fileInput" accept="image/*">
+<div class="panel">
 
-    <div class="preview-box">
-      <img id="preview" alt="Photo Preview">
-    </div>
-  </div>
+<h2>📷 1. Select Photo</h2>
 
-  <!-- Rotate -->
-  <div class="panel">
-    <h2>🔄 Rotate Photo</h2>
+<input
+  type="file"
+  id="fileInput"
+  accept="image/*"
+>
 
-    <button onclick="rotateImage(90)">Rotate 90°</button>
-    <button onclick="rotateImage(180)">Rotate 180°</button>
-    <button onclick="rotateImage(270)">Rotate 270°</button>
-    <button onclick="rotateImage(0)">Reset Rotation</button>
-  </div>
+<div class="preview-area">
+  <img id="preview" alt="Photo Preview">
+</div>
 
-  <!-- Effects -->
-  <div class="panel">
-    <h2>✨ Photo Effects</h2>
-
-    <button onclick="applyEffect('normal')">Normal</button>
-    <button onclick="applyEffect('grayscale')">Black & White</button>
-    <button onclick="applyEffect('brightness')">Bright</button>
-  </div>
-
-  <!-- Print Sheet -->
-  <div class="panel">
-    <h2>📄 Print Sheet</h2>
-
-    <p>Select number of copies:</p>
-
-    <select id="copies">
-      <option value="2">2 Copies</option>
-      <option value="4">4 Copies</option>
-      <option value="6">6 Copies</option>
-      <option value="8">8 Copies</option>
-      <option value="10">10 Copies</option>
-      <option value="12">12 Copies</option>
-    </select>
-
-    <br>
-
-    <button onclick="printSheet()">Create Print Sheet</button>
-
-    <br>
-
-    <canvas id="sheetCanvas"></canvas>
-
-    <br>
-
-    <button class="download" onclick="downloadCanvas()">
-      ⬇ Download Sheet
-    </button>
-  </div>
+<div class="info" id="photoInfo">
+  No photo selected.
+</div>
 
 </div>
 
+
+<!-- ================= PHOTO SIZE ================= -->
+
+<div class="panel">
+
+<h2>📐 2. Photo Size</h2>
+
+<select id="photoSize">
+
+  <option value="passport">
+    Passport Photo — 35 × 45 mm
+  </option>
+
+  <option value="cnic">
+    CNIC Photo — 35 × 45 mm
+  </option>
+
+  <option value="2x2">
+    2 × 2 Inch
+  </option>
+
+  <option value="1x1">
+    1 × 1 Inch
+  </option>
+
+  <option value="custom">
+    Custom Size
+  </option>
+
+</select>
+
+<div class="custom-size" id="customSize">
+
+  <input
+    type="number"
+    id="customWidth"
+    placeholder="Width"
+    min="1"
+  >
+
+  <input
+    type="number"
+    id="customHeight"
+    placeholder="Height"
+    min="1"
+  >
+
+  <select id="customUnit">
+    <option value="mm">mm</option>
+    <option value="inch">inch</option>
+  </select>
+
+</div>
+
+<br>
+
+<button class="blue" onclick="applyPhotoSize()">
+  Apply Photo Size
+</button>
+
+</div>
+
+
+<!-- ================= CROP ================= -->
+
+<div class="panel">
+
+<h2>✂️ 3. Crop</h2>
+
+<p>
+  Choose an aspect ratio. The crop is centered automatically.
+</p>
+
+<select id="cropRatio">
+
+  <option value="free">
+    Free / Original
+  </option>
+
+  <option value="35/45">
+    Passport / CNIC
+  </option>
+
+  <option value="1/1">
+    Square
+  </option>
+
+  <option value="4/6">
+    4 × 6
+  </option>
+
+  <option value="3/4">
+    3 × 4
+  </option>
+
+</select>
+
+<br>
+
+<button onclick="applyCrop()">
+  Apply Crop
+</button>
+
+</div>
+
+
+<!-- ================= BACKGROUND ================= -->
+
+<div class="panel">
+
+<h2>🎨 4. Background Color</h2>
+
+<button onclick="setBackground('#ffffff')">
+  White
+</button>
+
+<button onclick="setBackground('#e8f1ff')">
+  Light Blue
+</button>
+
+<button onclick="setBackground('#dbeafe')">
+  Blue
+</button>
+
+<button onclick="setBackground('#eeeeee')">
+  Gray
+</button>
+
+<input
+  type="color"
+  id="backgroundColor"
+  value="#ffffff"
+>
+
+<button onclick="useCustomBackground()">
+  Custom Color
+</button>
+
+<p>
+  Note: This changes the canvas background.
+  It does not automatically remove the original photo background.
+</p>
+
+</div>
+
+
+<!-- ================= ROTATE ================= -->
+
+<div class="panel">
+
+<h2>🔄 5. Rotate</h2>
+
+<button onclick="rotateImage(90)">
+  Rotate 90°
+</button>
+
+<button onclick="rotateImage(180)">
+  Rotate 180°
+</button>
+
+<button onclick="rotateImage(270)">
+  Rotate 270°
+</button>
+
+<button onclick="rotateImage(0)">
+  Reset
+</button>
+
+</div>
+
+
+<!-- ================= ENHANCE ================= -->
+
+<div class="panel">
+
+<h2>✨ 6. Enhance</h2>
+
+<button onclick="setFilter('normal')">
+  Normal
+</button>
+
+<button onclick="setFilter('bright')">
+  Bright
+</button>
+
+<button onclick="setFilter('contrast')">
+  Contrast
+</button>
+
+<button onclick="setFilter('bw')">
+  Black & White
+</button>
+
+<button onclick="setFilter('sharp')">
+  Sharp / Clear
+</button>
+
+</div>
+
+
+<!-- ================= PRINT SHEET ================= -->
+
+<div class="panel">
+
+<h2>🖨️ 7. Print Sheet</h2>
+
+<label>Paper:</label>
+
+<select id="paperSize">
+
+  <option value="a4">
+    A4
+  </option>
+
+  <option value="4x6">
+    4 × 6 Inch
+  </option>
+
+</select>
+
+<br><br>
+
+<label>Copies:</label>
+
+<select id="copies">
+
+  <option value="2">2</option>
+  <option value="4">4</option>
+  <option value="6">6</option>
+  <option value="8">8</option>
+  <option value="10">10</option>
+  <option value="12">12</option>
+  <option value="16">16</option>
+  <option value="20">20</option>
+
+</select>
+
+<br>
+
+<button class="green" onclick="createPrintSheet()">
+  Create Print Sheet
+</button>
+
+<canvas id="sheetCanvas"></canvas>
+
+<br>
+
+<button
+  class="green"
+  onclick="downloadSheet()"
+>
+  ⬇ Download JPG
+</button>
+
+</div>
+
+
+<!-- ================= RESET ================= -->
+
+<div class="panel">
+
+<h2>♻️ Reset</h2>
+
+<button class="red" onclick="resetEditor()">
+  Reset Everything
+</button>
+
+</div>
+
+</div>
+
+
 <footer>
-  PrintShop Tools — Built for printing & photocopy shops
+PrintShop Tools — Built for Printing & Photocopy Shops
 </footer>
+
 
 <script>
 
-let image = new Image();
-let currentRotation = 0;
-let currentEffect = "normal";
+/* =====================================================
+   GLOBAL VARIABLES
+===================================================== */
+
+let originalImage = new Image();
+
+let rotation = 0;
+
+let backgroundColor = "#ffffff";
+
+let filterValue = "none";
+
+let selectedWidth = 35;
+let selectedHeight = 45;
+
+let croppedCanvas = null;
 
 
-/* =========================
-   SELECT PHOTO
-========================= */
+/* =====================================================
+   PHOTO UPLOAD
+===================================================== */
 
-document.getElementById("fileInput").addEventListener("change", function(event) {
+document
+.getElementById("fileInput")
+.addEventListener("change", function(event) {
 
   const file = event.target.files[0];
 
@@ -200,22 +478,33 @@ document.getElementById("fileInput").addEventListener("change", function(event) 
 
   reader.onload = function(e) {
 
-    image.onload = function() {
+    originalImage.onload = function() {
 
-      const preview = document.getElementById("preview");
+      const preview =
+        document.getElementById("preview");
 
       preview.src = e.target.result;
+
       preview.style.display = "block";
 
-      currentRotation = 0;
-      currentEffect = "normal";
+      document
+        .getElementById("photoInfo")
+        .innerHTML =
+        "Original size: " +
+        originalImage.width +
+        " × " +
+        originalImage.height +
+        " pixels";
 
-      preview.style.transform = "rotate(0deg)";
-      preview.style.filter = "none";
+      rotation = 0;
+
+      filterValue = "none";
+
+      croppedCanvas = null;
 
     };
 
-    image.src = e.target.result;
+    originalImage.src = e.target.result;
 
   };
 
@@ -224,165 +513,604 @@ document.getElementById("fileInput").addEventListener("change", function(event) 
 });
 
 
-/* =========================
+/* =====================================================
+   PHOTO SIZE SELECT
+===================================================== */
+
+document
+.getElementById("photoSize")
+.addEventListener("change", function() {
+
+  const value = this.value;
+
+  const custom =
+    document.getElementById("customSize");
+
+  if (value === "custom") {
+
+    custom.style.display = "block";
+
+  } else {
+
+    custom.style.display = "none";
+
+  }
+
+});
+
+
+/* =====================================================
+   APPLY PHOTO SIZE
+===================================================== */
+
+function applyPhotoSize() {
+
+  const size =
+    document.getElementById("photoSize").value;
+
+  if (size === "passport" || size === "cnic") {
+
+    selectedWidth = 35;
+    selectedHeight = 45;
+
+  }
+
+  else if (size === "2x2") {
+
+    selectedWidth = 2;
+    selectedHeight = 2;
+
+  }
+
+  else if (size === "1x1") {
+
+    selectedWidth = 1;
+    selectedHeight = 1;
+
+  }
+
+  else if (size === "custom") {
+
+    const width =
+      parseFloat(
+        document.getElementById("customWidth").value
+      );
+
+    const height =
+      parseFloat(
+        document.getElementById("customHeight").value
+      );
+
+    const unit =
+      document.getElementById("customUnit").value;
+
+    if (!width || !height) {
+
+      alert("Enter custom width and height.");
+
+      return;
+    }
+
+    if (unit === "mm") {
+
+      selectedWidth = width;
+      selectedHeight = height;
+
+    } else {
+
+      selectedWidth = width * 25.4;
+      selectedHeight = height * 25.4;
+
+    }
+
+  }
+
+  alert(
+    "Photo size selected: " +
+    selectedWidth +
+    " × " +
+    selectedHeight +
+    " mm"
+  );
+
+}
+
+
+/* =====================================================
+   CROP
+===================================================== */
+
+function applyCrop() {
+
+  if (!originalImage.src) {
+
+    alert("Please select a photo first.");
+
+    return;
+  }
+
+  const ratioValue =
+    document.getElementById("cropRatio").value;
+
+  if (ratioValue === "free") {
+
+    croppedCanvas = null;
+
+    alert("Original image selected.");
+
+    return;
+  }
+
+  let ratio;
+
+  if (ratioValue === "35/45") {
+
+    ratio = 35 / 45;
+
+  }
+
+  else if (ratioValue === "1/1") {
+
+    ratio = 1;
+
+  }
+
+  else if (ratioValue === "4/6") {
+
+    ratio = 4 / 6;
+
+  }
+
+  else if (ratioValue === "3/4") {
+
+    ratio = 3 / 4;
+
+  }
+
+  const imgWidth = originalImage.width;
+  const imgHeight = originalImage.height;
+
+  let cropWidth;
+  let cropHeight;
+
+  if (imgWidth / imgHeight > ratio) {
+
+    cropHeight = imgHeight;
+
+    cropWidth = imgHeight * ratio;
+
+  } else {
+
+    cropWidth = imgWidth;
+
+    cropHeight = imgWidth / ratio;
+
+  }
+
+  const startX =
+    (imgWidth - cropWidth) / 2;
+
+  const startY =
+    (imgHeight - cropHeight) / 2;
+
+  const canvas =
+    document.createElement("canvas");
+
+  canvas.width = cropWidth;
+  canvas.height = cropHeight;
+
+  const ctx =
+    canvas.getContext("2d");
+
+  ctx.drawImage(
+    originalImage,
+    startX,
+    startY,
+    cropWidth,
+    cropHeight,
+    0,
+    0,
+    cropWidth,
+    cropHeight
+  );
+
+  croppedCanvas = canvas;
+
+  document.getElementById("preview").src =
+    canvas.toDataURL("image/jpeg", 0.95);
+
+}
+
+
+/* =====================================================
+   BACKGROUND
+===================================================== */
+
+function setBackground(color) {
+
+  backgroundColor = color;
+
+  alert(
+    "Background color set to " +
+    color
+  );
+
+}
+
+
+function useCustomBackground() {
+
+  backgroundColor =
+    document.getElementById(
+      "backgroundColor"
+    ).value;
+
+  alert(
+    "Custom background selected."
+  );
+
+}
+
+
+/* =====================================================
    ROTATE
-========================= */
+===================================================== */
 
 function rotateImage(degrees) {
 
-  if (!image.src) {
+  if (!originalImage.src) {
+
     alert("Please select a photo first.");
+
     return;
   }
 
-  currentRotation = degrees;
+  rotation = degrees;
 
-  const preview = document.getElementById("preview");
+  const preview =
+    document.getElementById("preview");
 
-  preview.style.transform = "rotate(" + degrees + "deg)";
+  preview.style.transform =
+    "rotate(" + degrees + "deg)";
+
 }
 
 
-/* =========================
-   PHOTO EFFECTS
-========================= */
+/* =====================================================
+   FILTERS
+===================================================== */
 
-function applyEffect(effect) {
+function setFilter(type) {
 
-  if (!image.src) {
+  if (!originalImage.src) {
+
     alert("Please select a photo first.");
+
     return;
   }
 
-  const preview = document.getElementById("preview");
+  filterValue = type;
 
-  currentEffect = effect;
+  const preview =
+    document.getElementById("preview");
 
-  if (effect === "normal") {
+  if (type === "normal") {
+
     preview.style.filter = "none";
+
   }
 
-  if (effect === "grayscale") {
-    preview.style.filter = "grayscale(100%)";
+  else if (type === "bright") {
+
+    preview.style.filter =
+      "brightness(125%)";
+
   }
 
-  if (effect === "brightness") {
-    preview.style.filter = "brightness(130%)";
+  else if (type === "contrast") {
+
+    preview.style.filter =
+      "contrast(140%)";
+
+  }
+
+  else if (type === "bw") {
+
+    preview.style.filter =
+      "grayscale(100%)";
+
+  }
+
+  else if (type === "sharp") {
+
+    preview.style.filter =
+      "contrast(125%) brightness(105%)";
+
   }
 
 }
 
 
-/* =========================
-   CREATE PRINT SHEET
-========================= */
+/* =====================================================
+   GET CURRENT IMAGE
+===================================================== */
 
-function printSheet() {
+function getCurrentSource() {
 
-  if (!image.src) {
-    alert("Please select a photo first.");
-    return;
+  if (croppedCanvas) {
+
+    return croppedCanvas;
+
   }
 
-  const canvas = document.getElementById("sheetCanvas");
-  const ctx = canvas.getContext("2d");
+  return originalImage;
 
-  const copies = parseInt(
-    document.getElementById("copies").value
+}
+
+
+/* =====================================================
+   DRAW IMAGE WITH ROTATION
+===================================================== */
+
+function drawProcessedImage(
+  ctx,
+  source,
+  x,
+  y,
+  width,
+  height
+) {
+
+  ctx.save();
+
+  ctx.translate(
+    x + width / 2,
+    y + height / 2
   );
 
-  canvas.width = 800;
-  canvas.height = 1100;
+  ctx.rotate(
+    rotation * Math.PI / 180
+  );
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (filterValue === "bright") {
+
+    ctx.filter =
+      "brightness(125%)";
+
+  }
+
+  else if (filterValue === "contrast") {
+
+    ctx.filter =
+      "contrast(140%)";
+
+  }
+
+  else if (filterValue === "bw") {
+
+    ctx.filter =
+      "grayscale(100%)";
+
+  }
+
+  else if (filterValue === "sharp") {
+
+    ctx.filter =
+      "contrast(125%) brightness(105%)";
+
+  }
+
+  else {
+
+    ctx.filter = "none";
+
+  }
+
+  const ratio =
+    Math.min(
+      width / source.width,
+      height / source.height
+    );
+
+  const drawWidth =
+    source.width * ratio;
+
+  const drawHeight =
+    source.height * ratio;
+
+  ctx.drawImage(
+    source,
+    -drawWidth / 2,
+    -drawHeight / 2,
+    drawWidth,
+    drawHeight
+  );
+
+  ctx.restore();
+
+}
+
+
+/* =====================================================
+   CREATE PRINT SHEET
+===================================================== */
+
+function createPrintSheet() {
+
+  if (!originalImage.src) {
+
+    alert("Please select a photo first.");
+
+    return;
+  }
+
+  const paper =
+    document.getElementById(
+      "paperSize"
+    ).value;
+
+  const copies =
+    parseInt(
+      document.getElementById(
+        "copies"
+      ).value
+    );
+
+  const canvas =
+    document.getElementById(
+      "sheetCanvas"
+    );
+
+  const ctx =
+    canvas.getContext("2d");
+
+  let paperWidth;
+  let paperHeight;
+
+  /* A4 at 150 DPI */
+
+  if (paper === "a4") {
+
+    paperWidth = 1240;
+    paperHeight = 1754;
+
+  }
+
+  /* 4x6 at 150 DPI */
+
+  else {
+
+    paperWidth = 600;
+    paperHeight = 900;
+
+  }
+
+  canvas.width = paperWidth;
+  canvas.height = paperHeight;
+
+  /* Background */
+
+  ctx.fillStyle =
+    "#ffffff";
+
+  ctx.fillRect(
+    0,
+    0,
+    paperWidth,
+    paperHeight
+  );
+
+  /* Grid */
 
   const columns = 2;
-  const rows = Math.ceil(copies / columns);
 
-  const cellWidth = canvas.width / columns;
-  const cellHeight = canvas.height / rows;
-
-  for (let i = 0; i < copies; i++) {
-
-    const x = (i % columns) * cellWidth;
-    const y = Math.floor(i / columns) * cellHeight;
-
-    ctx.save();
-
-    ctx.translate(
-      x + cellWidth / 2,
-      y + cellHeight / 2
+  const rows =
+    Math.ceil(
+      copies / columns
     );
 
-    ctx.rotate(
-      currentRotation * Math.PI / 180
+  const cellWidth =
+    paperWidth / columns;
+
+  const cellHeight =
+    paperHeight / rows;
+
+  const source =
+    getCurrentSource();
+
+  for (
+    let i = 0;
+    i < copies;
+    i++
+  ) {
+
+    const column =
+      i % columns;
+
+    const row =
+      Math.floor(
+        i / columns
+      );
+
+    const x =
+      column * cellWidth;
+
+    const y =
+      row * cellHeight;
+
+    /* Photo background */
+
+    ctx.fillStyle =
+      backgroundColor;
+
+    ctx.fillRect(
+      x + 5,
+      y + 5,
+      cellWidth - 10,
+      cellHeight - 10
     );
 
-    if (currentEffect === "grayscale") {
-      ctx.filter = "grayscale(100%)";
-    }
-
-    if (currentEffect === "brightness") {
-      ctx.filter = "brightness(130%)";
-    }
-
-    if (currentEffect === "normal") {
-      ctx.filter = "none";
-    }
-
-    const padding = 15;
-
-    const maxWidth = cellWidth - padding * 2;
-    const maxHeight = cellHeight - padding * 2;
-
-    let width = image.width;
-    let height = image.height;
-
-    const ratio = Math.min(
-      maxWidth / width,
-      maxHeight / height
+    drawProcessedImage(
+      ctx,
+      source,
+      x + 10,
+      y + 10,
+      cellWidth - 20,
+      cellHeight - 20
     );
 
-    width *= ratio;
-    height *= ratio;
-
-    ctx.drawImage(
-      image,
-      -width / 2,
-      -height / 2,
-      width,
-      height
-    );
-
-    ctx.restore();
   }
 
 }
 
 
-/* =========================
+/* =====================================================
    DOWNLOAD
-========================= */
+===================================================== */
 
-function downloadCanvas() {
+function downloadSheet() {
 
-  const canvas = document.getElementById("sheetCanvas");
+  const canvas =
+    document.getElementById(
+      "sheetCanvas"
+    );
 
-  if (canvas.width === 0) {
-    alert("Please create a print sheet first.");
+  if (
+    canvas.width === 0 ||
+    canvas.height === 0
+  ) {
+
+    alert(
+      "Create a print sheet first."
+    );
+
     return;
   }
 
-  const link = document.createElement("a");
+  const link =
+    document.createElement("a");
 
-  link.download = "printshop-sheet.jpg";
+  link.download =
+    "printshop-photo-sheet.jpg";
 
-  link.href = canvas.toDataURL(
-    "image/jpeg",
-    0.95
-  );
+  link.href =
+    canvas.toDataURL(
+      "image/jpeg",
+      0.95
+    );
 
   link.click();
+
+}
+
+
+/* =====================================================
+   RESET
+===================================================== */
+
+function resetEditor() {
+
+  location.reload();
 
 }
 
